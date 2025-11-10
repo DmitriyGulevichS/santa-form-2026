@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Тайный Санта 2026</title>
+  <style>
+    :root {
+      --bg: #102040;
+      --card: #132347;
+      --accent: #3b82f6;
+      --accent2: #60a5fa;
+      --text: #e5e7eb;
+      --sub: #bcd7ff;
+      --border: #243044;
+      --danger: #ef4444;
+    }
+    html, body { height: 100%; margin:0; }
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(1200px 800px at 20% -10%, #162d54 0, transparent 60%),
+        linear-gradient(180deg,#182c54 0%, #102040 100%);
+      color:var(--text);
+      font:16px/1.5 system-ui, -apple-system, Segoe UI, Inter, Roboto, Arial, sans-serif;
+      margin:0;
+    }
+    .wrap {
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding-top:60px;
+      padding-bottom:60px;
+    }
+    .card {
+      width:min(720px,96vw);
+      background:linear-gradient(180deg,#172d4a,#14244a);
+      border:1px solid var(--border);
+      border-radius:24px;
+      padding:32px 24px 28px;
+      box-shadow: 0 10px 40px rgba(0,42,150,0.30);
+      margin:0 auto;
+      position:relative;
+    }
+    .hdr { display:flex; gap:12px; align-items:center; margin-bottom:12px }
+    .logo { width:46px; height:46px; border-radius:14px; background: conic-gradient(from 0deg, var(--accent) 0 25%, var(--accent2) 0 50%, #7dd3fc 0 75%, #60a5fa 0 100%); box-shadow:0 0 0 3px #60a5fa55 }
+    h1 { margin:0; font-size:24px; color:var(--accent); font-weight:800; }
+    p.lead { margin:0 0 18px; color:var(--sub); font-size:1.1em }
+    .chips { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; font-size:14px; }
+    .chip { padding:6px 12px; border-radius:999px; border:1px dashed #375985; background:#172d4a; color:#93c5fd;}
+    form { display:grid; gap:16px }
+    label { display:block; margin:6px 0 6px; font-weight:600; color:var(--accent2) }
+    input[type="text"] {
+      width:100%; padding:12px 14px; border-radius:14px;
+      border:1px solid var(--border); background:#121e37;
+      color:var(--text); outline:none; font-size:1em;
+      box-shadow:0 0 0 0px #3b82f640;
+      transition:box-shadow 0.2s,border 0.2s;
+    }
+    input[type="text"]:focus {
+      border-color: var(--accent); box-shadow:0 0 0 4px #3b82f680;
+    }
+    .wish, .nogift {
+      display:flex; gap:10px; align-items:center; margin-bottom:7px;
+    }
+    .wish input, .nogift input { flex:1 0 0 }
+    button.btn-danger, button.btn-ghost, button.btn-primary {
+      padding:8px 14px;border-radius:12px;border:1px solid transparent;cursor:pointer;font-weight:700;
+      user-select:none;transition:background 0.2s,box-shadow 0.2s;
+    }
+    button.btn-danger { background:var(--danger);color:#fff;border-color: #391313;}
+    button.btn-danger:hover { background:#be123c; }
+    button.btn-ghost { background:#162d54;color:#60a5fa;border-color: var(--border) }
+    button.btn-ghost:hover { background:#1058be;color:#fff }
+    button.btn-primary {
+      background: linear-gradient(90deg,var(--accent),var(--accent2));
+      color: #fff; border-color:var(--accent2);
+      width:100%;max-width:280px;justify-content:center;box-shadow:0 0 15px #60a5fa70;
+    }
+    button.btn-primary:hover { background: var(--accent2); color:#182c54; }
+    .actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:7px; justify-content:flex-start }
+    .msg {margin-top:8px;font-size:14px;min-height:20px;}
+    .ok {color:#5eead4;}
+    .err {color:var(--danger);}
+    .footer {margin-top:16px;color:var(--sub);font-size:12px;text-align:center;}
+    .sent-message {
+      min-height:320px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.6em;
+      color: var(--accent2);
+      font-weight:700;
+    }
+    @media (max-width: 600px) {
+      .card { padding:18px 4vw 18px; }
+      h1 { font-size:20px; }
+      .logo { width:36px; height:36px; }
+      .chips { font-size:12px; gap:5px;}
+      .chip { padding:5px 9px;}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="hdr">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Тайный Санта 2026</h1>
+          <p class="lead">Приветствуем в волшебной игре обмена подарками! Заполните форму, чтобы помочь вашему Санте выбрать лучший подарок.<br>
+            <b>Бюджет подарка — до 1 500 ₽.</b>
+          </p>
+        </div>
+      </div>
+      <div class="chips">
+        <div class="chip">🎁 Пожеланий и «не дарить» можно несколько</div>
+        <div class="chip">🔒 Данные идут только организатору</div>
+        <div class="chip">🕒 Заполнение займет 1–2 минуты</div>
+      </div>
+      <div id="formBlock">
+        <form id="santaForm" method="post" action="YOUR_APPS_SCRIPT_WEB_APP_URL" target="hidden_iframe" autocomplete="on" novalidate>
+          <div>
+            <label for="fullname">ФИО участника</label>
+            <input id="fullname" name="fullname" type="text" placeholder="Иванов Иван Иванович" required />
+          </div>
+          <div id="wishesSection">
+            <label>Что бы вы хотели получить от Санты?</label>
+            <div class="wish">
+              <input type="text" name="wish[]" placeholder="Подарок, желание или ссылка" required />
+              <button class="btn btn-danger" type="button" onclick="removeField(this)">✕</button>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn btn-ghost" type="button" onclick="addWish()">+ Добавить пожелание</button>
+          </div>
+          <div id="nogiftSection">
+            <label>Чего вам лучше не дарить?</label>
+            <div class="nogift">
+              <input type="text" name="nogift[]" placeholder="Что не хотелось бы получить или ссылка" />
+              <button class="btn btn-danger" type="button" onclick="removeField(this)">✕</button>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn btn-ghost" type="button" onclick="addNoGift()">+ Добавить, чего не дарить</button>
+          </div>
+          <div class="actions">
+            <button id="submitBtn" class="btn btn-primary" type="submit">Отправить</button>
+          </div>
+          <div id="msg" class="msg"></div>
+        </form>
+      </div>
+      <div id="sentBlock" class="sent-message" style="display:none;">Форма отправлена! Спасибо!</div>
+      <iframe name="hidden_iframe" id="hidden_iframe" style="display:none"></iframe>
+      <div class="footer">Размещайте эту страницу на любом статическом хостинге или разделе сайта</div>
+    </div>
+  </div>
+  <script>
+    const wishesSection = document.getElementById('wishesSection');
+    const nogiftSection = document.getElementById('nogiftSection');
+    const msg = document.getElementById('msg');
+    const submitBtn = document.getElementById('submitBtn');
+    const formBlock = document.getElementById('formBlock');
+    const sentBlock = document.getElementById('sentBlock');
+    let submitting = false;
+
+    function addWish() {
+      const row = document.createElement('div');
+      row.className = 'wish';
+      row.innerHTML = `
+        <input type="text" name="wish[]" placeholder="Подарок, желание или ссылка" required />
+        <button class="btn btn-danger" type="button" onclick="removeField(this)">✕</button>
+      `;
+      wishesSection.appendChild(row);
+    }
+    function addNoGift() {
+      const row = document.createElement('div');
+      row.className = 'nogift';
+      row.innerHTML = `
+        <input type="text" name="nogift[]" placeholder="Что не хотелось бы получить или ссылка" />
+        <button class="btn btn-danger" type="button" onclick="removeField(this)">✕</button>
+      `;
+      nogiftSection.appendChild(row);
+    }
+    function removeField(btn) {
+      btn.closest('.wish, .nogift').remove();
+    }
+    window.onload = () => {
+      if (wishesSection.querySelectorAll('.wish').length === 0) addWish();
+      if (nogiftSection.querySelectorAll('.nogift').length === 0) addNoGift();
+    };
+    // Отключаем отправку формы по Enter
+    document.getElementById('santaForm').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        // Не отправлять форму по Enter
+        if (document.activeElement.tagName === 'INPUT') {
+          e.preventDefault();
+        }
+      }
+    });
+    // Обработка формы
+    const form = document.getElementById('santaForm');
+    form.addEventListener('submit', (e) => {
+      if (!form.checkValidity()) {
+        e.preventDefault();
+        msg.textContent = 'Проверьте обязательные поля';
+        msg.className = 'msg err';
+        return;
+      }
+      submitting = true;
+      submitBtn.disabled = true;
+      msg.textContent = 'Отправка...';
+      msg.className = 'msg';
+    });
+    document.getElementById('hidden_iframe').addEventListener('load', () => {
+      if (!submitting) return;
+      submitting = false;
+      submitBtn.disabled = false;
+      form.reset();
+      while (wishesSection.firstChild) wishesSection.removeChild(wishesSection.firstChild);
+      while (nogiftSection.firstChild) nogiftSection.removeChild(nogiftSection.firstChild);
+      addWish();
+      addNoGift();
+      formBlock.style.display = 'none';
+      sentBlock.style.display = 'flex';
+    });
+  </script>
+</body>
+</html>
