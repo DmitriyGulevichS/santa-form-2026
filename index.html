@@ -121,10 +121,12 @@
       </div>
       <div id="formBlock">
         <form id="santaForm" method="post" action="https://script.google.com/macros/s/AKfycbxn2fKnD6kVChFG7anutNj-z4fxAnnInVwWnD7jgJPTnuJ0ksiO5svjQYmrbmGqWSg/exec" target="hidden_iframe" autocomplete="on" novalidate>
+
           <div>
             <label for="fullname">ФИО участника</label>
             <input id="fullname" name="fullname" type="text" placeholder="Иванов Иван Иванович" required />
           </div>
+
           <div id="wishesSection">
             <label>Что бы вы хотели получить от Санты?</label>
             <div class="wish">
@@ -135,6 +137,7 @@
           <div class="actions">
             <button class="btn btn-ghost" type="button" onclick="addWish()">+ Добавить пожелание</button>
           </div>
+
           <div id="nogiftSection">
             <label>Чего вам лучше не дарить?</label>
             <div class="nogift">
@@ -145,17 +148,23 @@
           <div class="actions">
             <button class="btn btn-ghost" type="button" onclick="addNoGift()">+ Добавить, чего не дарить</button>
           </div>
+
           <div class="actions">
             <button id="submitBtn" class="btn btn-primary" type="submit">Отправить</button>
           </div>
+
           <div id="msg" class="msg"></div>
         </form>
       </div>
+
       <div id="sentBlock" class="sent-message" style="display:none;">Форма отправлена! Спасибо!</div>
+
       <iframe name="hidden_iframe" id="hidden_iframe" style="display:none"></iframe>
+
       <div class="footer">Размещайте эту страницу на любом статическом хостинге или разделе сайта</div>
     </div>
   </div>
+
   <script>
     const wishesSection = document.getElementById('wishesSection');
     const nogiftSection = document.getElementById('nogiftSection');
@@ -190,16 +199,51 @@
       if (wishesSection.querySelectorAll('.wish').length === 0) addWish();
       if (nogiftSection.querySelectorAll('.nogift').length === 0) addNoGift();
     };
-    // Отключаем отправку формы по Enter
+
+    // Перед отправкой формы объединяем массивы полей в одну строку для передачи
+    document.getElementById('santaForm').addEventListener('submit', function(e) {
+      // Собираем все wishes в одну строку с разделителем "; "
+      const wishInputs = document.querySelectorAll('input[name="wish[]"]');
+      const wishes = Array.from(wishInputs).map(i => i.value.trim()).filter(Boolean).join('; ');
+
+      // Собираем все nogift в одну строку
+      const nogiftInputs = document.querySelectorAll('input[name="nogift[]"]');
+      const nogifts = Array.from(nogiftInputs).map(i => i.value.trim()).filter(Boolean).join('; ');
+
+      // Добавляем скрытые поля с объединёнными значениями
+      let wishesHidden = document.querySelector('input[name="wishesStr"]');
+      if (!wishesHidden) {
+        wishesHidden = document.createElement('input');
+        wishesHidden.type = 'hidden';
+        wishesHidden.name = 'wishesStr';
+        this.appendChild(wishesHidden);
+      }
+      wishesHidden.value = wishes;
+
+      let nogiftsHidden = document.querySelector('input[name="nogiftsStr"]');
+      if (!nogiftsHidden) {
+        nogiftsHidden = document.createElement('input');
+        nogiftsHidden.type = 'hidden';
+        nogiftsHidden.name = 'nogiftsStr';
+        this.appendChild(nogiftsHidden);
+      }
+      nogiftsHidden.value = nogifts;
+
+      // Отключаем оригинальные input, чтобы не отправлялись дубли
+      wishInputs.forEach(i => i.disabled = true);
+      nogiftInputs.forEach(i => i.disabled = true);
+    });
+
+    // Отключаем отправку по Enter в поле
     document.getElementById('santaForm').addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
-        // Не отправлять форму по Enter
         if (document.activeElement.tagName === 'INPUT') {
           e.preventDefault();
         }
       }
     });
-    // Обработка формы
+
+    // Обработка отправки формы, вывод сообщения
     const form = document.getElementById('santaForm');
     form.addEventListener('submit', (e) => {
       if (!form.checkValidity()) {
