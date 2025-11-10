@@ -185,7 +185,7 @@
       <div class="actions">
         <button type="button" class="btn btn-ghost" onclick="addNoGift()">+ Добавить, чего не дарить</button>
       </div>
-      <button type="submit" class="btn btn-primary">Отправить</button>
+      <button type="submit" id="submitBtn" class="btn btn-primary">Отправить</button>
     </form>
     <div class="footer">Размещайте эту страницу на любом статическом хостинге или разделе сайта</div>
     <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
@@ -194,6 +194,11 @@
   <script>
     const wishesSection = document.getElementById('wishesSection');
     const nogiftSection = document.getElementById('nogiftSection');
+    const submitBtn = document.getElementById('submitBtn');
+    const msg = document.createElement('div');
+    msg.style.marginTop = '10px';
+    msg.style.fontSize = '14px';
+    document.querySelector('form').appendChild(msg);
 
     function addWish() {
       const div = document.createElement('div');
@@ -213,6 +218,27 @@
       const parentDiv = button.closest('.wish, .nogift');
       if (parentDiv) parentDiv.remove();
     }
+
+    document.getElementById('santaForm').addEventListener('submit', function(e) {
+      msg.textContent = '';
+      submitBtn.disabled = true;
+    });
+
+    document.getElementById('hidden_iframe').addEventListener('load', () => {
+      msg.textContent = 'Готово! Запись сохранена';
+      msg.style.color = '#5eead4';
+      submitBtn.disabled = false;
+      document.getElementById('santaForm').reset();
+      while (wishesSection.firstChild) wishesSection.removeChild(wishesSection.firstChild);
+      while (nogiftSection.firstChild) nogiftSection.removeChild(nogiftSection.firstChild);
+      addWish();
+      addNoGift();
+    });
+
+    window.onload = () => {
+      if (wishesSection.querySelectorAll('.wish').length === 0) addWish();
+      if (nogiftSection.querySelectorAll('.nogift').length === 0) addNoGift();
+    };
   </script>
 </body>
 </html>
