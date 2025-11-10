@@ -17,9 +17,7 @@
     }
     html, body {
       height: 100%; margin:0;
-      background:
-        radial-gradient(1200px 800px at 20% -10%, #162d54 0, transparent 60%),
-        linear-gradient(180deg,#182c54 0%, #102040 100%);
+      background: #102040;
       color:var(--text);
       font:16px/1.5 system-ui, -apple-system, Segoe UI, Inter, Roboto, Arial, sans-serif;
     }
@@ -47,7 +45,7 @@
     .chip { padding:6px 12px; border-radius:999px; border:1px dashed #375985; background:#172d4a; color:#93c5fd;}
     form { display:grid; gap:16px; }
     label { display:block; margin:6px 0 6px; font-weight:600; color:var(--accent2) }
-    input[type="text"] {
+    input[type="text"], textarea {
       width:100%; padding:12px 14px; border-radius:14px;
       border:1px solid var(--border); background:#121e37;
       color:var(--text); outline:none; font-size:1em;
@@ -55,7 +53,12 @@
       transition:box-shadow 0.2s,border 0.2s;
       box-sizing: border-box;
     }
-    input[type="text"]:focus {
+    textarea {
+      min-height:64px;
+      resize:vertical;
+      margin-bottom:10px;
+    }
+    input[type="text"]:focus, textarea:focus {
       border-color: var(--accent); box-shadow:0 0 0 4px #3b82f680;
     }
     .wish, .nogift {
@@ -89,7 +92,6 @@
       color: var(--accent2);
       font-weight:700;
     }
-    .footer {margin-top:16px;color:var(--sub);font-size:12px;text-align:center;}
     @media (max-width:600px) {
       .card { padding:12px 4vw 12px; }
       h1 { font-size:20px; }
@@ -107,7 +109,7 @@
         <div class="chip">🕒 Заполнение займет 1–2 минуты</div>
       </div>
       <div id="formBlock">
-        <form id="santaForm" action="https://script.google.com/macros/s/AKfycbwkdG7OzyzvkDGnTDoz1f0etqOT2rj5i0xWT6LzI9RKMGEC70JULV9_m5C6bNQm32gV5A/exec" method="post" target="hidden_iframe" autocomplete="on" novalidate>
+        <form id="santaForm" action="https://script.google.com/macros/s/AKfycbzlX9Dv3uOLaMhPdduj57v_XMVxv512paxZTI1SaKllpGyn3WkrAZD--FUJ9XLoQQlNjw/exec" method="post" target="hidden_iframe" autocomplete="on" novalidate>
           <input type="hidden" name="wishesStr" id="wishesStr" />
           <input type="hidden" name="nogiftsStr" id="nogiftsStr" />
 
@@ -134,6 +136,11 @@
           <div class="actions">
             <button class="btn btn-ghost" type="button" onclick="addNoGift()">+ Добавить, чего не дарить</button>
           </div>
+
+          <!-- Поле комментария -->
+          <label for="comment">Комментарий</label>
+          <textarea id="comment" name="comment" placeholder="Оставьте комментарий, если хотите"></textarea>
+
           <div class="actions">
             <button id="submitBtn" class="btn btn-primary" type="submit">Отправить</button>
           </div>
@@ -142,7 +149,6 @@
       </div>
       <div id="sentBlock" class="sent-message" style="display:none;">Форма успешно отправлена! Спасибо!</div>
       <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
-      <div class="footer">Размещайте эту страницу на любом статическом хостинге или разделе сайта</div>
     </div>
   </div>
   <script>
@@ -183,7 +189,6 @@
     document.getElementById('santaForm').addEventListener('submit', function(e) {
       e.preventDefault();
 
-      // Собираем значения
       const wishesArr = Array.from(wishesSection.querySelectorAll('input[name="wish[]"]'))
         .map(i => i.value.trim()).filter(Boolean);
       const nogiftsArr = Array.from(nogiftSection.querySelectorAll('input[name="nogift[]"]'))
@@ -191,18 +196,20 @@
       const wishesStr = wishesArr.join(', ');
       const nogiftsStr = nogiftsArr.join(', ');
       const fio = this.fullname.value.trim();
+      const commentStr = this.comment.value.trim();
+
       document.getElementById('wishesStr').value = wishesStr;
       document.getElementById('nogiftsStr').value = nogiftsStr;
 
-      // Логирования для отладки
+      // Логи для контроля
       console.log('=== ОТПРАВКА ФОРМЫ ===');
       console.log('ФИО:', fio);
       console.log('wishes[]:', wishesArr);
       console.log('nogift[]:', nogiftsArr);
+      console.log('Комментарий:', commentStr);
       console.log('wishesStr:', wishesStr);
       console.log('nogiftsStr:', nogiftsStr);
 
-      // Валидация
       if (!fio) {
         msg.textContent = 'Пожалуйста, укажите ФИО';
         msg.className = 'msg err';
@@ -218,13 +225,6 @@
       msg.textContent = 'Отправка...';
       msg.className = 'msg';
 
-      // Ещё раз лог для контроля перед отправкой
-      console.log('Payload в hidden:', {
-        fullname: fio,
-        wishesStr: wishesStr,
-        nogiftsStr: nogiftsStr
-      });
-
       this.submit();
     });
 
@@ -234,7 +234,6 @@
         sentBlock.style.display = 'flex';
         msg.textContent = "";
         submitBtn.disabled = false;
-        // Очистка формы возвращает один пустой wish и nogift по умолчанию
         wishesSection.innerHTML = '';
         nogiftSection.innerHTML = '';
         addWish();
